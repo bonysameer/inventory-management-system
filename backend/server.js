@@ -3,18 +3,35 @@ const dotenv = require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+//const { urlencoded } = require("body-parser");
+const userRoute = require("./routes/userRoutes");
+const errorHandler = require("./middleWare/errorMiddleware")
+const cookieParser = require('cookie-parser');
 
 mongoose.set('strictQuery', false);
 
 const app = express()
 
+//MIDDLEWARE
 app.use(express.json());
-app.use(express.urlencoded({extended: false}))
+app.use(cookieParser());
+app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
+app.use(cors());
+//ROUTES MIDDLEWARE
+app.use("/api/users", userRoute)
+//ROUTES
 app.get("/", function(req,res,next){
    res.send("HELLO WORLD")
 })
+// app.use(express.json());
+// app.use(express.urlencoded({extended: false}));
+// app.use(bodyParser.json());
+
+
+//ERRORHANDLER
+app.use(errorHandler);
+
 
 const PORT=process.env.PORT
 // mongoose.connect("mongodb+srv://Sameerbony:Indianarmy@cluster0.u45axrp.mongodb.net/Inventory-app?retryWrites=true&w=majority")
